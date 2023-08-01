@@ -1,0 +1,69 @@
+import requests
+
+API_URL = "https://samples.openweathermap.org/data/2.5/forecast/hourly?q=London,us&appid=b6907d289e10d714a6e88b30761fae22"
+
+def get_weather_data():
+    response = requests.get(API_URL)
+    if response.status_code == 200:
+        return response.json()["list"]
+    else:
+        print("Error fetching weather data.")
+        return []
+
+def get_option_from_user():
+    print("1. Get temperature")
+    print("2. Get Wind Speed")
+    print("3. Get Pressure")
+    print("0. Exit")
+    return int(input("Enter your choice: "))
+
+def get_weather_info_by_date(date, weather_data):
+    for data in weather_data:
+        if data["dt_txt"].startswith(date):
+            return data
+    return None
+
+def print_weather_info(weather_info):
+    if weather_info:
+        print(f"Temperature: {weather_info['main']['temp']}°C")
+    else:
+        print("Weather data not available for the specified date.")
+
+def print_wind_speed_info(weather_info):
+    if weather_info:
+        print(f"Wind Speed: {weather_info['wind']['speed']} m/s")
+    else:
+        print("Weather data not available for the specified date.")
+
+def print_pressure_info(weather_info):
+    if weather_info:
+        print(f"Pressure: {weather_info['main']['pressure']} hPa")
+    else:
+        print("Weather data not available for the specified date.")
+
+def main():
+    weather_data = get_weather_data()
+
+    while True:
+        option = get_option_from_user()
+
+        if option == 0:
+            print("Exiting the program.")
+            break
+        elif option == 1:
+            date = input("Enter the date (YYYY-MM-DD): ")
+            weather_info = get_weather_info_by_date(date, weather_data)
+            print_weather_info(weather_info)
+        elif option == 2:
+            date = input("Enter the date (YYYY-MM-DD): ")
+            weather_info = get_weather_info_by_date(date, weather_data)
+            print_wind_speed_info(weather_info)
+        elif option == 3:
+            date = input("Enter the date (YYYY-MM-DD): ")
+            weather_info = get_weather_info_by_date(date, weather_data)
+            print_pressure_info(weather_info)
+        else:
+            print("Invalid option. Please try again.")
+
+if __name__ == "__main__":
+    main()
